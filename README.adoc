@@ -18,88 +18,20 @@ Technologies involved:
 * https://asciidoc.org/[AsciiDoc] as format to write the software architecture documentation
 * https://doctoolchain.org[docToolchain] to generate the representations of the software architecture documentation written in https://asciidoc.org/[AsciiDoc]. docToolchain makes use of  https://docs.asciidoctor.org/asciidoctor[Asciidoctor].
 * https://kroki.io[Kroki] to generate diagrams
-* https://github.com/npryce/adr-tools[adr-tools] to generate and manage Architecture Decision Records (ADRs)
 
 For more tech inspiration take a look at the https://www.workingsoftware.dev/documentation-as-code-tools[Documentation as Code Technology Radar]
 
 == Prerequisites
+==== Install docToolchain
+* [docToolchain tutorial](https://doctoolchain.org/docToolchain/v2.0.x/020_tutorial/010_Install.html)
+* configure path to structurizr main dsl file in the docToolchainConfig.groovy
 
-=== Generate PlantUML Diagrams from the C4 Model
-
-==== With the Structurizr CLI via Docker Image
-
-[source, bash]
-----
-docker run -it --rm -v $PWD:/usr/local/structurizr structurizr/cli export -w documentation/bank.dsl -format plantuml/structurizr -output documentation/diagrams
-----
-
-==== With a local installed Structurizr CLI
-
-Download the https://github.com/structurizr/cli/releases[structurizr-cli], unzip and move it into `./bin/structurizr-cli` or use the latest Docker Image
-
-[source, bash]
-----
-curl --show-error --location https://github.com/structurizr/cli/releases/download/v{selected-version}/structurizr-cli-{selected-version}.zip  -o tmp.zip && unzip -d bin/structurizr-cli/. tmp.zip && rm tmp.zip
-----
-
-Generate the diagrams from the structurizr workspace model
-
-[source, bash]
-----
-./bin/structurizr-cli/structurizr.sh export -w documentation/bank.dsl -format plantuml/structurizr -output documentation/diagrams
-----
-
-==== With the docToolchain
-
+==== Generate PlantUML from the structurizr using the docToolchain
 https://doctoolchain.org/docToolchain/[docToolchain] uses the Structurizr CLI to generate the PlantUML diagrams from the C4 Model described in the Structurizr DSL.
 
 [source, bash]
 ----
 ./dtcw exportStructurizr
-----
-
-== Migrate markdown based ADRs from adr-tools to AsciiDoc
-
-=== Install and configure adr-tools
-
-. Install https://github.com/npryce/adr-tools[adr-tools]
-. Configure the adr template with the following header config
-
-[source, bash]
-----
-adr config
-----
-
-Replace the content of the `template.md` file with the following content:
-
-[source, markdown]
-----
-### TITLE
-
-Date: DATE
-
-#### Status
-
-STATUS
-
-#### Context
-
-The issue motivating this decision, and any context that influences or constrains the decision.
-
-#### Decision
-
-The change that we're proposing or have agreed to implement.
-
-#### Consequences
-
-What becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.
-----
-
-=== Migrate the generated markdown based decisions with the docker-asciidoctor image under Linux
-
-[source, bash]
-----
-./dtcw exportMarkdown && cp ./build/adrs/*.adoc ./documentation/adrs/
 ----
 
 == Generate the software architecture documentation representations
